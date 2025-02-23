@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>XYZ Domain Generator</title>
+	<link rel="icon" type="image/png" href="https://workers.cloudflare.com/favicon.ico" sizes="48x48">
+	<style>
+		:root {
+			--bg: #1a1b26;
+			--text: #a9b1d6;
+			--accent: #6AA6E2;
+			--surface: #24283b;
+			--error: #ff7a72;
+		}
+
+		.disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font: 14px/1.5 'JetBrains Mono', monospace;
+			margin: 2rem;
+			display: flex;
+			justify-content: center;
+		}
+
+		.container {
+			background: linear-gradient(145deg, #16161e 0%, #1a1b26 100%);
+			border-radius: 12px;
+			padding: 1.5rem;
+			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+			max-width: 400px;
+			width: 100%;
+		}
+
+		h1 {
+			color: var(--accent);
+			margin: 0 0 1.5rem;
+			font-size: 1.4em;
+			font-weight: 600;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.input-group {
+			display: flex;
+			gap: 0.5rem;
+			margin-bottom: 0.5rem;
+		}
+
+		input {
+			flex: 1;
+			background: var(--surface);
+			border: 1px solid #3b4261;
+			color: var(--text);
+			padding: 0.8rem;
+			border-radius: 8px;
+			transition: all 0.2s ease;
+		}
+
+		input:focus {
+			outline: none;
+			border-color: var(--accent);
+			box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
+		}
+
+		button {
+			background: var(--accent);
+			color: var(--bg);
+			border: none;
+			padding: 0.8rem 1.2rem;
+			border-radius: 8px;
+			cursor: pointer;
+			font-weight: 500;
+			transition: transform 0.2s ease;
+		}
+
+		button:hover {
+			transform: translateY(-1px);
+		}
+
+		#result {
+			background: var(--surface);
+			padding: 1rem;
+			border-radius: 8px;
+			margin-top: 1rem;
+			word-break: break-all;
+			display: none;
+		}
+
+		#result.visible {
+			display: block;
+		}
+
+		#result.invalid {
+			outline: 2px solid var(--error);
+			outline-offset: -1px;
+		}
+
+		#result.success {
+			outline: 2px solid #7af7a5;
+			outline-offset: -1px;
+		}
+
+		.copy-btn,
+		.check-btn {
+			background: #3b4261;
+			color: var(--text);
+			margin-left: 0.5rem;
+			padding: 0.25rem 0.75rem;
+			border-radius: 6px;
+			font-size: 0.9em;
+			text-decoration: none;
+			display: inline-block;
+		}
+
+		.check-btn {
+			background: var(--accent);
+			color: var(--bg);
+		}
+
+		.warning {
+			color: var(--error);
+			font-size: 0.9em;
+			margin-top: 0.5rem;
+			display: none;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.warning.visible {
+			display: flex;
+		}
+
+		.info-icon {
+			cursor: help;
+			font-size: 0.8em;
+			opacity: 0.7;
+		}
+
+		.info-box {
+			display: none;
+			background: var(--surface);
+			padding: 1rem;
+			border-radius: 8px;
+			margin: 1rem 0 0.75rem 0;
+			font-size: 0.9em;
+			line-height: 1.4;
+		}
+
+		.info-box.visible {
+			display: block;
+		}
+
+		.info-box ul {
+			margin: 0.5rem 0;
+			padding-left: 1.2rem;
+		}
+
+		.availability {
+			margin-top: 0.75rem;
+			padding: 0.75rem;
+			border-radius: 6px;
+			font-size: 0.9em;
+		}
+
+		.checking {
+			background: rgba(122, 162, 247, 0.1);
+			color: var(--accent);
+		}
+
+		.available {
+			background: rgba(122, 247, 165, 0.1);
+			color: #7af7a5;
+		}
+
+		.taken {
+			background: rgba(255, 122, 114, 0.1);
+			color: var(--error);
+		}
+
+		.error {
+			background: rgba(255, 122, 114, 0.1);
+			color: var(--error);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>🔢 XYZ Domain Generator <span class="info-icon" onclick="toggleInfo()">ⓘ</span></h1>
+
+		<div class="info-box" id="infoContent">
+			<strong>About This Tool:</strong>
+			<ul>
+				<li>Generates numeric .xyz domains eligible for $0.83/year pricing</li>
+				<li>Real-time availability checks</li>
+				<li>Converts letters to ASCII decimal values</li>
+			</ul>
+			<em>Note: Actual pricing may vary by registrar</em>
+		</div>
+
+		<div class="input-group">
+			<input type="text" id="inputWord" placeholder="Enter your word..." maxlength="9" autofocus>
+			<button onclick="generateXYZ()">Generate</button>
+		</div>
+
+		<div id="result"></div>
+		<div id="warning" class="warning"></div>
+	</div>
+
+	<script>
+		async function checkAvailability(domain) {
+			try {
+				const response = await fetch(`/api/check?domain=${domain}`);
+				if (!response.ok) {
+					const error = await response.json();
+					throw new Error(error.error);
+				}
+				return await response.json();
+			} catch (error) {
+				throw new Error(error.message);
+			}
+		}
+
+		async function generateXYZ() {
+			const input = document.getElementById('inputWord');
+			const word = input.value.trim();
+			let numeric = '';
+
+			for (let i = 0; i < word.length; i++) {
+				numeric += word.charCodeAt(i);
+			}
+
+			const warning = document.getElementById('warning');
+			const resultDiv = document.getElementById('result');
+			const numericLength = numeric.length;
+			const result = `${numeric}.xyz`;
+
+			resultDiv.classList.add('visible');
+			resultDiv.classList.remove('success', 'invalid');
+			warning.classList.remove('visible');
+			resultDiv.innerHTML = `
+		<div class="domain-output">
+		  ${result} 
+		  <button class="copy-btn" onclick="copyToClipboard('${result}')">Copy</button>
+		  <button class="check-btn" onclick="checkDomainAvailability('${result}')">Check Availability</button>
+		</div>
+	  `;
+
+			if (numericLength < 6 || numericLength > 9) {
+				resultDiv.classList.add('invalid');
+				warning.classList.add('visible');
+				warning.innerHTML = `⚠️ Warning: ${numericLength} digits (needs 6-9 for $0.83 pricing)`;
+			}
+		}
+
+		async function checkDomainAvailability(domain) {
+			const resultDiv = document.getElementById('result');
+			const statusDiv = document.createElement('div');
+			statusDiv.className = 'availability checking';
+			statusDiv.textContent = 'Checking availability...';
+
+			// Remove any existing status div
+			const existingStatus = resultDiv.querySelector('.availability');
+			if (existingStatus) {
+				existingStatus.remove();
+			}
+
+			resultDiv.appendChild(statusDiv);
+
+			try {
+				const data = await checkAvailability(domain);
+				statusDiv.classList.remove('checking');
+
+				const isAvailable = data.status[0].status.includes('inactive');
+				const isPremium = data.status[0].summary === 'premium';
+
+				statusDiv.classList.add(isAvailable ? 'available' : 'taken');
+				resultDiv.classList.remove('invalid');
+
+				if (isAvailable) {
+					resultDiv.classList.add('success');
+					statusDiv.innerHTML = `
+			${isPremium ? '⭐ Available for $0.83/year' : '✅ Available for registration!'}
+			<a href="https://domains.cloudflare.com/?domain=${domain}" 
+			   class="copy-btn" 
+			   target="_blank" 
+			   rel="noopener">Cloudflare 🔗</a>
+		  `;
+				} else {
+					statusDiv.innerHTML = '❌ Domain already taken';
+				}
+			} catch (error) {
+				statusDiv.classList.remove('checking');
+				statusDiv.classList.add('error');
+				statusDiv.textContent = `⚠️ ${error.message}`;
+			}
+
+			document.getElementsByClassName("check-btn")[0].disabled = true;
+			document.getElementsByClassName("check-btn")[0].classList.add('disabled');
+		}
+
+		function toggleInfo() {
+			document.getElementById('infoContent').classList.toggle('visible');
+		}
+
+		function copyToClipboard(text) {
+			navigator.clipboard.writeText(text).then(() => {
+				const copyBtn = document.querySelector('.copy-btn');
+				copyBtn.textContent = 'Copied!';
+				setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+			});
+		}
+
+		document.getElementById('inputWord').addEventListener('keypress', function (e) {
+			if (e.key === 'Enter') generateXYZ();
+		});
+	</script>
+</body>
+
+</html>
