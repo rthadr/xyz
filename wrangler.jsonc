@@ -6,13 +6,14 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "xyz",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-02-14",
+	"compatibility_date": "2024-12-30",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
 	"assets": {
 		"binding": "ASSETS",
-		"directory": "./public"
+		"directory": "./public",
+    "experimental_serve_directly": true
 	},
 	"observability": {
 		"enabled": true

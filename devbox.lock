@@ -4,6 +4,68 @@
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
       "resolved": "github:NixOS/nixpkgs/dad564433178067be1fbdfcce23b546254b6d641?lastModified=1740019556&narHash=sha256-vn285HxnnlHLWnv59Og7muqECNMS33mWLM14soFIv2g%3D"
     },
+    "glibc@2.35": {
+      "last_modified": "2023-04-11T12:20:34Z",
+      "resolved": "github:NixOS/nixpkgs/5a156c2e89c1eca09b40bcdcee86760e0e4d79a9#glibc",
+      "source": "devbox-search",
+      "version": "2.35-224",
+      "systems": {
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/cpjpkqs9qg93nlphsnaazn15why6n8hq-glibc-2.35-224",
+              "default": true
+            },
+            {
+              "name": "bin",
+              "path": "/nix/store/xx8ip67nkbdq1r5zalkgk16vim30dzxa-glibc-2.35-224-bin",
+              "default": true
+            },
+            {
+              "name": "static",
+              "path": "/nix/store/442cnxrra98yxlz2kq1hbbhlb0yx7wkz-glibc-2.35-224-static"
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/q6y0534izshyb33x3pd47rkfl49ci3y6-glibc-2.35-224-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/mkxbzqis17psznvhfqgz9159crg5314m-glibc-2.35-224-dev"
+            }
+          ],
+          "store_path": "/nix/store/cpjpkqs9qg93nlphsnaazn15why6n8hq-glibc-2.35-224"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8xk4yl1r3n6kbyn05qhan7nbag7npymx-glibc-2.35-224",
+              "default": true
+            },
+            {
+              "name": "bin",
+              "path": "/nix/store/2fdhd8fchkqcc01mrq75cpcks6830f7h-glibc-2.35-224-bin",
+              "default": true
+            },
+            {
+              "name": "debug",
+              "path": "/nix/store/6ljk622iif36gjklszdhbr007jwdfidz-glibc-2.35-224-debug"
+            },
+            {
+              "name": "dev",
+              "path": "/nix/store/2yqq5627yd9i5rba8r4div57jc2092y8-glibc-2.35-224-dev"
+            },
+            {
+              "name": "static",
+              "path": "/nix/store/9b4f93hqhd2vzz0ygq057hs089agic06-glibc-2.35-224-static"
+            }
+          ],
+          "store_path": "/nix/store/8xk4yl1r3n6kbyn05qhan7nbag7npymx-glibc-2.35-224"
+        }
+      }
+    },
     "nodejs-slim@23": {
       "last_modified": "2025-02-07T11:26:36Z",
       "plugin_version": "0.0.2",
@@ -66,54 +128,6 @@
             }
           ],
           "store_path": "/nix/store/38iyfhg4ihw2qmzw38xp6yijjhx80495-nodejs-slim-23.7.0"
-        }
-      }
-    },
-    "wrangler@latest": {
-      "last_modified": "2025-02-03T12:02:36Z",
-      "resolved": "github:NixOS/nixpkgs/c96875e768da1b176250c3bd0edce6b4f7b5d4bb#wrangler",
-      "source": "devbox-search",
-      "version": "3.80.1",
-      "systems": {
-        "aarch64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/w1layv0aj7zayyv39gz5407iwzjqsyhy-wrangler-3.80.1",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/w1layv0aj7zayyv39gz5407iwzjqsyhy-wrangler-3.80.1"
-        },
-        "aarch64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/cmkm6a8wwrrh0cnsg8rr47lvld5ad1rf-wrangler-3.80.1",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/cmkm6a8wwrrh0cnsg8rr47lvld5ad1rf-wrangler-3.80.1"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/nhzk94l80mgv2mbq1afy1xw02dazpdip-wrangler-3.80.1",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/nhzk94l80mgv2mbq1afy1xw02dazpdip-wrangler-3.80.1"
-        },
-        "x86_64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/3n9kwrm58shsrjpzj6zc1zc7p65i4hc5-wrangler-3.80.1",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/3n9kwrm58shsrjpzj6zc1zc7p65i4hc5-wrangler-3.80.1"
         }
       }
     }
