@@ -26,9 +26,9 @@ router.get("/api/check", async ({ query, headers }, env: Env, _: ExecutionContex
 
 	// Validate domain format (6-9 digits .xyz)
 	if (!domain || !/^\d{6,9}\.xyz$/.test(domain)) {
-		return new Response(
-			JSON.stringify({ error: "Invalid numeric .xyz domain format" }),
-			{ status: 400, headers: { "Content-Type": "application/json" } }
+		return Response.json(
+			{ message: "Invalid numeric .xyz domain format" },
+			{ status: 400 },
 		);
 	}
 
@@ -38,9 +38,9 @@ router.get("/api/check", async ({ query, headers }, env: Env, _: ExecutionContex
 	const currentCount = parseInt((await env.xyz.get(rateLimitKey)) || "0");
 
 	if (currentCount >= limit) {
-		return new Response(
-			JSON.stringify({ error: `Rate limit exceeded (${limit} requests/hour)` }),
-			{ status: 429, headers: { "Content-Type": "application/json" } }
+		return Response.json(
+			{ message: `Rate limit exceeded (${limit} requests/hour)` },
+			{ status: 429 },
 		);
 	}
 
@@ -58,20 +58,11 @@ router.get("/api/check", async ({ query, headers }, env: Env, _: ExecutionContex
 		if (!response.ok) throw new Error("API request failed");
 
 		const data = await response.json<DomainStatus>();
-		return new Response(JSON.stringify(data), {
-			headers: {
-				"Content-Type": "application/json"
-			},
-		});
+		return Response.json(data);
 	} catch (error) {
-		return new Response(
-			JSON.stringify({ message: "Domain check service unavailable" }),
-			{
-				status: 502,
-				headers: {
-					"Content-Type": "application/json"
-				},
-			}
+		return Response.json(
+			{ message: "Domain check service unavailable" },
+			{status: 502 },
 		);
 	}
 })
