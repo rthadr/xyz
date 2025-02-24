@@ -1,17 +1,3 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
-
 import { AutoRouter } from "itty-router";
 
 interface DomainStatus {
@@ -34,7 +20,7 @@ router.get("/api/check", async ({ query, headers }, env: Env, _: ExecutionContex
 
 	// Rate limiting
 	const rateLimitKey = `rate_limit:${ip}`;
-	const limit = 100; // Requests per hour
+	const limit = 100;
 	const currentCount = parseInt((await env.xyz.get(rateLimitKey)) || "0");
 
 	if (currentCount >= limit) {
