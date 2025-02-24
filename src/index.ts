@@ -1,10 +1,10 @@
-import { AutoRouter } from "itty-router";
+import { IttyRouter } from "itty-router";
 
 interface DomainStatus {
 	status: string[];
 }
 
-const router = AutoRouter();
+const router = IttyRouter();
 
 router.get("/api/check", async ({ query, headers }, env: Env, _: ExecutionContext) => {
 	const { domain } = query as { domain: string };
