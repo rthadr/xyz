@@ -2,7 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.0/.schema/devbox.schema.json",
   "packages": [
     "nodejs-slim@23",
-    "glibc@2.35"
+    "glibc@2.35",
+    "bun@latest"
   ],
   "env": {
     "DEVBOX_COREPACK_ENABLED": "false"
@@ -12,8 +13,11 @@
       "echo 'Welcome to devbox!' > /dev/null"
     ],
     "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
+      "dev": [
+        "bun run dev"
+      ],
+      "deploy": [
+        "bun run deloy"
       ]
     }
   }

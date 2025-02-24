@@ -48,7 +48,7 @@ router.get("/api/check", async ({ query, headers }, env: Env, _: ExecutionContex
 	} catch (error) {
 		return Response.json(
 			{ message: "Domain check service unavailable" },
-			{status: 502 },
+			{ status: 502 },
 		);
 	}
 })
